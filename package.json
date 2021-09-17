@@ -1,0 +1,23 @@
+{
+  "name": "http-server-drill",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/junaidkhanM/Junaid-http-server.git"
+  },
+  "author": "Junaid Khan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/junaidkhanM/Junaid-http-server/issues"
+  },
+  "homepage": "https://github.com/junaidkhanM/Junaid-http-server#readme",
+  "dependencies": {
+    "uuid": "^8.3.2"
+  }
+}

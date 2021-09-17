@@ -1,4 +1,5 @@
 const http = require('http');
+const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 
 const PORT = 3000;
@@ -17,7 +18,7 @@ const server = http.createServer((req, res) => {
     readFile('./Files/data.json', res);
   } else if (req.url === '/uuid') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    readFile('./Files/uuid.json', res);
+    res.end(JSON.stringify({ uuid: uuidv4() }));
   } else if (req.url === '/status/' + arr[2]) {
     res.writeHead(arr[2], { 'Content-Type': 'text/html' });
     res.end(`<h1>Response with status code ${arr[2]}.<h1>`);
