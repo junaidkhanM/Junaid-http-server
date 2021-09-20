@@ -32,6 +32,10 @@ app.get('/delay/:id', (req, res) => {
   }, req.params.id * 1000);
 });
 
+app.get('*', function (req, res) {
+  res.status(404).send('<h4> Error 404 : Page Not Found!');
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
