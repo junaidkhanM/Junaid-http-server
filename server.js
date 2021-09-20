@@ -1,50 +1,39 @@
-const http = require('http');
+const express = require('express');
 const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
+const path = require('path');
+const jsonFile = require('./Files/data.json');
 
-const PORT = 3000;
+const app = express();
 
-const server = http.createServer((req, res) => {
-  const arr = req.url.split('/');
-
-  if (req.url === '/') {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end('<h1>Hello from server<h1>');
-  } else if (req.url === '/html') {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    readFile('./Files/file.html', res);
-  } else if (req.url === '/json') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    readFile('./Files/data.json', res);
-  } else if (req.url === '/uuid') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ uuid: uuidv4() }));
-  } else if (req.url === '/status/' + arr[2]) {
-    res.writeHead(arr[2], { 'Content-Type': 'text/html' });
-    res.end(`<h1>Response with status code ${arr[2]}.<h1>`);
-  } else if (req.url === '/delay/' + arr[2]) {
-    setTimeout(() => {
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.write(`<h1>Response after delay of ${arr[2]} sec.<h1>`);
-      res.end();
-    }, arr[2] * 1000);
-  } else {
-    res.writeHead(404, { 'Content-Type': 'text/html' });
-    res.end('<h4>404 Not Found<h4>');
-  }
+app.get('/', (req, res) => {
+  res.send('<h1>Hello from server<h1>');
 });
 
-const readFile = (fileName, res) => {
-  fs.readFile(fileName, function (err, data) {
-    if (err) {
-      res.writeHead(404, { 'Content-Type': 'text/html' });
-      return res.end('<h4>404 Not Found<h4>');
-    }
-    res.write(data);
-    return res.end();
-  });
-};
+app.get('/html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Files/file.html'));
+});
 
-server.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+app.get('/json', (req, res) => {
+  res.json(jsonFile);
+});
+
+app.get('/uuid', (req, res) => {
+  res.json({ uuid: uuidv4() });
+});
+
+app.get('/status/:id', (req, res) => {
+  res.status(req.params.id);
+  res.send(`<h1>Response with status code ${req.params.id}.<h1>`);
+});
+
+app.get('/delay/:id', (req, res) => {
+  setTimeout(() => {
+    res.send(`<h1>Response after delay of ${req.params.id} sec.<h1>`);
+  }, req.params.id * 1000);
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
